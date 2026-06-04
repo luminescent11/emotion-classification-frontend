@@ -78,6 +78,45 @@ async function uploadFile() {
     chart.update()
 }
 
+/*
+async function uploadFileToBePreprocessed() {
+    const file = fileInput.files[0]
+    // check the file is valid
+    if (!file) {
+        alert("Please select a file to upload.")
+        return
+    }
+    if (!file.type.startsWith("audio/")) {
+        alert("Please select a valid audio file.")
+        return
+    }
+    if (file.size > 10 * 1024 * 1024) { // 10 MB limit
+        alert("File size exceeds the 10 MB limit.")
+        return
+    }
+    if (fileInput.files.length > 1) {
+        alert("Please select only one file.")
+        return
+    }
+
+    // Create FormData object containing audio file
+    const formData = new FormData()
+    formData.append("file", file)
+
+    const response = await fetch(`${API_URL}/preprocess`, {
+        method: "POST",
+        body: formData
+    })
+
+    const result = await response.blob()
+    // Convert blob into local browser URL
+    const localUrl = URL.createObjectURL(imageBlob);
+    document.getElementById("processed-audio").src = localUrl
+}
+
+*/
+
+
 function getLabels() {
     fetch(`${API_URL}/labels`)
         .then(response => response.json())
