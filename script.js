@@ -52,6 +52,7 @@ async function startRecording() {
 
 function stopRecording() {
     mediaRecorder.stop();
+    mediaRecorder.stream.getTracks().forEach(track => track.stop());
 }
 
 /* This is the API/server interaction logic */
