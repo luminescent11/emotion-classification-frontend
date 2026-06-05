@@ -34,6 +34,13 @@ const chart = new Chart(document.getElementById('radarChart'), {
 /* This is the API/server interaction logic */
 
 let API_URL = "https://emotions-api-1043697508655.us-central1.run.app"
+let API_URL_LOCAL = "http://localhost:8000"
+
+let localTesting = true
+if (localTesting) {
+    API_URL = API_URL_LOCAL
+}
+
 
 let labelsButton = document.getElementById("retrieve-labels-button")
 let submitAudioButton = document.getElementById("submit-audio-button")
@@ -73,9 +80,14 @@ async function uploadFile() {
     console.log(response)
 
     const result = await response.json()
-    document.getElementById("output").textContent = JSON.stringify(result)
-    chart.data.datasets[0].data = Object.values(result)
+    document.getElementById("output").textContent = JSON.stringify(result.emotions)
+    chart.data.datasets[0].data = Object.values(result.emotions)
     chart.update()
+
+    // Debugging logs
+    console.log("Raw audio shape:", result["raw audio shape"])
+    console.log("Mel spectrogram shape:", result["mel spectrogram shape"])
+    console.log("Mel spectrogram tensor:", result["mel spectrogram tensor"])
 }
 
 /*
