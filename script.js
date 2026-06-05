@@ -31,6 +31,29 @@ const chart = new Chart(document.getElementById('radarChart'), {
     }
 })
 
+/* MEDIARECORDER LOGIC */
+
+let mediaRecorder;
+let audioChunks = [];
+
+async function startRecording() {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaRecorder = new MediaRecorder(stream);
+    audioChunks = [];
+
+    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+    mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        await sendAudio(audioBlob);
+    };
+
+    mediaRecorder.start();
+}
+
+function stopRecording() {
+    mediaRecorder.stop();
+}
+
 /* This is the API/server interaction logic */
 
 let API_URL = "https://emotions-api-1043697508655.us-central1.run.app"
@@ -39,6 +62,24 @@ let API_URL_LOCAL = "http://localhost:8000"
 let localTesting = true
 if (localTesting) {
     API_URL = API_URL_LOCAL
+}
+
+
+
+
+async function sendAudio(audioBlob) {
+    const formData = new FormData();
+    formData.append('file', audioBlob, 'recording.webm');
+
+    const response = await fetch(`${API_URL}/predict`, {
+        method: 'POST',
+        body: formData
+    });
+
+    const result = await response.json();
+    document.getElementById("output").textContent = JSON.stringify(result.emotions)
+    chart.data.datasets[0].data = Object.values(result.emotions)
+    chart.update()
 }
 
 
@@ -83,11 +124,6 @@ async function uploadFile() {
     document.getElementById("output").textContent = JSON.stringify(result.emotions)
     chart.data.datasets[0].data = Object.values(result.emotions)
     chart.update()
-
-    // Debugging logs
-    console.log("Raw audio shape:", result["raw audio shape"])
-    console.log("Mel spectrogram shape:", result["mel spectrogram shape"])
-    console.log("Mel spectrogram tensor:", result["mel spectrogram tensor"])
 }
 
 
