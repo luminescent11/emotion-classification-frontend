@@ -3,33 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Emotion Classifier</title>
+    <link rel="icon" href="images/favicon.png" type="image/png">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1 style="font-family: Verdana, sans-serif;">Emotions API</h1>
-    <p>Here is some information about this project: [to be filled]</p>
-    <p>The notebook can be found on the GitHub.</p>
+    <header id="header">
+        <nav>
+            <ul id="header-list">
+                <li><h1 href="index.html" id="header-title">Emotion Classifier</h1></li>
+                <li></li>
+
+                <li><a href="" title="Notebook (WIP)">
+                    <img src="images/colab.png" alt="Notebook" class="icon"></img>
+                </a></li>
+                <li><a href="https://github.com/susamogus154/emotion-classification-api">
+                    <img src="images/github.svg" alt="GitHub" class="icon"></img>
+                </a></li>
+                <li><a href="#how-it-works">How it works (WIP)</a></li>
+            </ul>
+        </nav>
+    </header>
 
     <div>
         <button id="retrieve-labels-button" onclick="getLabels()">Retrieve emotion labels</button>
     </div>
-    <br>
+    
     <div>
-        <input type="file" id="fileInput" accept="audio/*">
+        <input type="file" id="file-input" accept="audio/*">
     </div>
-    <br>
+    
     <div>
         <button id="submit-audio-button" onclick="uploadFile()">Get emotion</button>
     </div>
-    <br>
 
     <button onclick="startRecording()">Start Recording</button>
     <button onclick="stopRecording()">Stop & Analyze</button>
 
-    <div id="output"></div>
-    <canvas id="radarChart" width="400" height="400"></canvas>
+    <div id="output">
+        <div id="raw-output"></div>
+        <div id="biggest-percentage">--%</div>
+        <div id="main-emotion">---</div>
+    </div>
+    <canvas id="radar-chart"></canvas>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
     <script src="script.js"></script>
+
+
+
+
+
+
+    <h2 id="how-it-works">How it works</h2>
+    <p>WIP</p>
 </body>
 </html>

@@ -8,7 +8,7 @@ const emotions = {
     "Surprised": 0
 }
 
-const chart = new Chart(document.getElementById('radarChart'), {
+const chart = new Chart(document.getElementById('radar-chart'), {
     type: 'radar',
     data: {
         labels: Object.keys(emotions),
@@ -87,7 +87,7 @@ async function sendAudio(audioBlob) {
 let labelsButton = document.getElementById("retrieve-labels-button")
 let submitAudioButton = document.getElementById("submit-audio-button")
 
-let fileInput = document.getElementById("fileInput")
+let fileInput = document.getElementById("file-input")
 
 async function uploadFile() {
     const file = fileInput.files[0]

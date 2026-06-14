@@ -1,0 +1,59 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+#header {
+    padding-top: 2%;
+    padding-bottom: 2%;
+    padding-left: 5%;
+    padding-right: 5%;
+
+    background-color: #f8f8f8;
+    position: sticky;
+    top: 0;
+}
+
+#header-list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#header-title {
+    font-family: Verdana, sans-serif;
+    font-size: 48px;
+}
+
+.icon {
+    max-width: 100px;
+    height: 50px;
+    background-color: transparent;
+
+    /* Add hover effect easing back out also*/
+    transform: scale(1.0);
+    transition: transform 0.3s ease-out;
+}
+
+.icon:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: transform 0.3s ease-out;
+}
+
+#radar-chart {
+    width: 400px;
+    height: 400px;
+}
