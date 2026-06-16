@@ -1,10 +1,12 @@
 /* ── Reset ─────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html, body {
+html {
     height: 100%;
+}
+
+html, body {
     overflow-x: hidden;
-    overscroll-behavior-y: none;
 }
 
 /* ── Base ──────────────────────────────────────────────── */
@@ -75,8 +77,7 @@ h1, h2, h3 { line-height: 1.2; }
     display: flex;
     gap: 1.5rem;
     padding: 2rem 4%;
-    flex: 1;
-    align-items: flex-start;
+    align-items: stretch;
 }
 
 /* ── Left column ───────────────────────────────────────── */
@@ -85,6 +86,67 @@ h1, h2, h3 { line-height: 1.2; }
     flex-direction: column;
     gap: 1rem;
     flex: 0 0 clamp(200px, 22vw, 320px);
+}
+
+.left-column > .control-section { flex: 1; }
+
+.left-column .input-group {
+    flex: 1;
+}
+
+.left-column .file-input-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    border: 1px dashed #cbd5e0;
+    border-radius: 8px;
+    background-color: #f7fafc;
+    overflow: hidden;
+}
+
+.left-column .file-input-wrapper input[type="file"] {
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    padding: 0 0.5rem;
+    width: 100%;
+    font-size: 1rem;
+    flex: none;
+}
+
+.left-column .file-input-wrapper input[type="file"]::file-selector-button {
+    padding: 0.45rem 0.8rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    background-color: #4f46e5;
+    color: #ffffff;
+    margin-right: 0.75rem;
+    transition: background-color 0.2s;
+}
+
+.left-column .file-input-wrapper input[type="file"]::file-selector-button:hover {
+    background-color: #4338ca;
+}
+
+.left-column .input-group button,
+.left-column .recording-control button {
+    flex: 1;
+    font-size: 1.05rem;
+}
+
+.left-column .recording-control {
+    flex: 1;
+}
+
+.left-column .timer {
+    font-size: 1.4rem;
+}
+
+.left-column .control-section h3 {
+    font-size: 0.9rem;
 }
 
 .control-section {
@@ -178,6 +240,7 @@ button:active { transform: translateY(0); }
     flex: 1;
     min-width: 0;
     align-items: stretch;
+    height: 80vh;
 }
 
 #results-box,
@@ -193,6 +256,8 @@ button:active { transform: translateY(0); }
     align-items: center;
     justify-content: center;
 }
+
+#results-box { align-items: stretch; }
 
 /* ── Results box ───────────────────────────────────────── */
 .results-container {
@@ -228,7 +293,12 @@ button:active { transform: translateY(0); }
     letter-spacing: 0.08em;
 }
 
-.result-minor { width: 100%; }
+.result-minor {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
 
 .emotion-list {
     list-style: none;
@@ -236,10 +306,12 @@ button:active { transform: translateY(0); }
     flex-direction: column;
     gap: 0.4rem;
     width: 100%;
+    flex: 1;
 }
 
 .emotion-item {
     display: flex;
+    flex: 1;
     justify-content: space-between;
     align-items: center;
     padding: 0.3rem 0.6rem;
@@ -251,6 +323,37 @@ button:active { transform: translateY(0); }
 
 .emotion-item .percent { opacity: 0.9; }
 
+/* ── Loading state ─────────────────────────────────────── */
+#results-box.is-loading .results-container { display: none; }
+#results-box:not(.is-loading) .results-loading { display: none; }
+
+.results-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    height: 100%;
+}
+
+.spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid #e2e8f0;
+    border-top-color: #4f46e5;
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-caption {
+    font-size: 0.85rem;
+    color: #718096;
+    font-weight: 500;
+}
+
 /* ── Emotion colors ────────────────────────────────────── */
 .emotion-angry     { color: #e53e3e; }
 .emotion-disgusted { color: #6f42c1; }
@@ -261,23 +364,123 @@ button:active { transform: translateY(0); }
 .emotion-surprised { color: #0bc5ea; }
 
 /* ── Chart box ─────────────────────────────────────────── */
-#chart-box { padding: 1rem; }
+#chart-box {
+    padding: 1rem;
+    flex: 0 0 80vh;
+}
 
 #radar-chart {
     width: 100% !important;
     height: 100% !important;
 }
 
-/* ── How it works ──────────────────────────────────────── */
-#how-it-works {
-    padding: 3rem 4%;
-    font-size: 1.5rem;
-    color: #1a1a2e;
+/* ── Minor emotions placeholder ────────────────────────── */
+#minor-emotions > h3 {
+    font-size: 1rem;
+    text-transform: none;
+    letter-spacing: normal;
+    color: #a0aec0;
+    font-weight: 500;
+    text-align: center;
+    padding-top: 1rem;
 }
 
-body > p {
-    padding: 0 4% 3rem;
+/* ── Intro section ──────────────────────────────────────── */
+#intro {
+    padding: 2.5rem 4%;
+    overflow: hidden;
+}
+
+#intro h2 {
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+}
+
+#intro p {
     color: #718096;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 0.6rem;
+}
+
+#nih-link {
+    float: right;
+    margin: 0.25rem 0 1.25rem 2.5rem;
+    text-align: center;
+    text-decoration: none;
+}
+
+#nih-link img {
+    width: clamp(90px, 10vw, 160px);
+    display: block;
+}
+
+#nih-link p {
+    font-size: 0.78rem;
+    color: #4f46e5;
+    margin-top: 0.4rem;
+    margin-bottom: 0;
+    max-width: clamp(90px, 10vw, 160px);
+    line-height: 1.3;
+}
+
+/* ── How it works ──────────────────────────────────────── */
+#how-it-works {
+    padding: 4rem 4%;
+    background-color: #ffffff;
+    border-top: 1px solid #e2e8f0;
+}
+
+#how-it-works > h2 {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 800;
+    color: #1a1a2e;
+    margin-bottom: 0.4rem;
+}
+
+.section-subtitle {
+    color: #718096;
+    font-size: 0.95rem;
+    margin-bottom: 2.5rem;
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+
+.step-card {
+    background-color: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.step-number {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #4f46e5;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+.step-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.step-card p {
+    font-size: 0.875rem;
+    color: #718096;
+    line-height: 1.6;
 }
 
 /* ── Accessibility ─────────────────────────────────────── */

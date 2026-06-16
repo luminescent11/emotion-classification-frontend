@@ -25,12 +25,32 @@
         </nav>
     </header>
 
+    <section id="intro">
+        <a id="nih-link" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10894494/">
+            <img src="images/NIH_logo.png" alt="NIH Logo">
+            <p>Learn more about this topic's research and applications</p>
+        </a>
+        <h2>Classifying Emotions using Audio - Introduction</h2>
+        <p>
+            While classifying emotions in audio recordings may seem to not have real-world applications, this NIH article on the right explores the massive amount of research conducted in this field to make complex models for emotional analysis, not just from audio, but also from other data such as facial features. Obviously, all this development was not done just to achieve a higher accuracy number: the article also explains how this research is directly applicable in healthcare for diagnosing, treating, and monitoring patients with psychological and neurological conditions.
+
+            Specifically, the article states that diagnosing these sorts of conditions was initially done "by using invasive devices and medical assessments", and that "Automatic emotion recognition methods assist doctors ... in accurately identifying diseases associated with emotional features in real time". Monitoring these patients could be done autonomously by processing their live data and predicting emotions using such a machine learning model, allowing doctors to draw conclusions based on a large quantity of patient emotion data; for example, fluctuations in patient emotion.
+
+            Additionally, this sort of tool used in healthcare has the potential to save doctors' time (so they can focus on other aspects of patient care and treat more patients) by automating the tedious process of analyzing patients' emotions.
+        </p>
+        <p>
+            "patients with conditions such as epilepsy, stroke, facial paralysis, facial numbness, and coma ... cannot express real emotions through objective external features (such as language and facial expressions) and autonomous behaviors. Therefore, it is necessary to design an automated system to effectively detect the emotions of such patients."
+        </p>
+    </section>
+
     <div class="main-container">
         <div class="left-column">
             <div class="control-section">
                 <h3>Upload Audio</h3>
                 <div class="input-group">
-                    <input type="file" id="file-input" accept="audio/*">
+                    <div class="file-input-wrapper">
+                        <input type="file" id="file-input" accept="audio/*">
+                    </div>
                     <button id="submit-audio-button" onclick="uploadFile()">Get emotion</button>
                 </div>
             </div>
@@ -48,6 +68,10 @@
 
         <div class="right-column">
             <div class="control-section" id="results-box">
+                <div class="results-loading">
+                    <div class="spinner"></div>
+                    <span class="loading-caption">Analyzing audio…</span>
+                </div>
                 <div class="results-container">
                     <div class="result-main">
                         <div class="result-center">
@@ -56,8 +80,9 @@
                         </div>
                     </div>
                     <div class="result-minor">
-                        <h3 class="visually-hidden">Other emotions</h3>
-                        <ul id="minor-emotions" class="emotion-list"></ul>
+                        <ul id="minor-emotions" class="emotion-list">
+                            <h3>Submit a recording to see predictions</h3>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -71,7 +96,26 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
     <script src="script.js"></script>
 
-    <h2 id="how-it-works">How it works</h2>
-    <p>WIP</p>
+    <section id="how-it-works">
+        <h2>How it works</h2>
+        <p class="section-subtitle">A fine-tuned speech emotion recognition model trained on the RAVDESS dataset</p>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">01</div>
+                <h3>Input audio</h3>
+                <p>Record live or upload a .wav / .mp3 file. The model accepts up to 10 MB of audio and works best with clear, single-speaker recordings.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">02</div>
+                <h3>Feature extraction</h3>
+                <p>The audio is converted into Mel-frequency cepstral coefficients (MFCCs) and a mel spectrogram — compact numerical representations of the sound's tonal and rhythmic character.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">03</div>
+                <h3>Classification</h3>
+                <p>A fine-tuned neural network processes the features and outputs a probability distribution across seven emotion classes: angry, disgusted, fearful, happy, neutral, sad, and surprised.</p>
+            </div>
+        </div>
+    </section>
 </body>
 </html>

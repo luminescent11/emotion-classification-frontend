@@ -63,7 +63,7 @@ function updateResults(emotionsObj) {
     // Populate minor emotions
     const minorList = document.getElementById('minor-emotions');
     if (minorList) {
-        minorList.innerHTML = '';
+        minorList.innerHTML = '<h3>Other emotions</h3>';
         labels.forEach(label => {
             if (label === biggestLabel) return;
             const li = document.createElement('li');
@@ -137,6 +137,14 @@ function updateTimer() {
     document.getElementById('timer').textContent = timeString;
 }
 
+function showLoading() {
+    document.getElementById('results-box').classList.add('is-loading');
+}
+
+function hideLoading() {
+    document.getElementById('results-box').classList.remove('is-loading');
+}
+
 /* This is the API/server interaction logic */
 
 let API_URL = "https://emotions-api-1043697508655.us-central1.run.app"
@@ -151,6 +159,7 @@ if (localTesting) {
 
 
 async function sendAudio(audioBlob) {
+    showLoading();
     const formData = new FormData();
     formData.append('file', audioBlob, 'recording.webm');
 
@@ -160,6 +169,7 @@ async function sendAudio(audioBlob) {
     });
 
     const result = await response.json();
+    hideLoading();
     updateResults(result.emotions);
     chart.data.datasets[0].data = Object.values(result.emotions);
     chart.update();
@@ -190,6 +200,7 @@ async function uploadFile() {
     }
 
     // Create FormData object containing audio file
+    showLoading();
     const formData = new FormData()
     formData.append("file", file)
 
@@ -202,6 +213,7 @@ async function uploadFile() {
     console.log(response)
 
     const result = await response.json();
+    hideLoading();
     updateResults(result.emotions);
     chart.data.datasets[0].data = Object.values(result.emotions);
     chart.update();
