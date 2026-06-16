@@ -25,35 +25,51 @@
         </nav>
     </header>
 
-    <div>
-        <button id="retrieve-labels-button" onclick="getLabels()">Retrieve emotion labels</button>
-    </div>
-    
-    <div>
-        <input type="file" id="file-input" accept="audio/*">
-    </div>
-    
-    <div>
-        <button id="submit-audio-button" onclick="uploadFile()">Get emotion</button>
-    </div>
+    <div class="main-container">
+        <div class="left-column">
+            <div class="control-section">
+                <h3>Upload Audio</h3>
+                <div class="input-group">
+                    <input type="file" id="file-input" accept="audio/*">
+                    <button id="submit-audio-button" onclick="uploadFile()">Get emotion</button>
+                </div>
+            </div>
 
-    <button onclick="startRecording()">Start Recording</button>
-    <button onclick="stopRecording()">Stop & Analyze</button>
+            <h3>OR</h3>
 
-    <div id="output">
-        <div id="raw-output"></div>
-        <div id="biggest-percentage">--%</div>
-        <div id="main-emotion">---</div>
+            <div class="control-section">
+                <h3>Record Audio</h3>
+                <div class="recording-control">
+                    <button id="recording-button" onclick="toggleRecording()">Start Recording</button>
+                    <div id="timer" class="timer">00:00</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-column">
+            <div class="control-section" id="results-box">
+                <div class="results-container">
+                    <div class="result-main">
+                        <div class="result-center">
+                            <div id="biggest-percentage" class="emotion-main">--%</div>
+                            <div id="main-emotion" class="emotion-label">---</div>
+                        </div>
+                    </div>
+                    <div class="result-minor">
+                        <h3 class="visually-hidden">Other emotions</h3>
+                        <ul id="minor-emotions" class="emotion-list"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-section" id="chart-box">
+                <canvas id="radar-chart"></canvas>
+            </div>
+        </div>
     </div>
-    <canvas id="radar-chart"></canvas>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
     <script src="script.js"></script>
-
-
-
-
-
 
     <h2 id="how-it-works">How it works</h2>
     <p>WIP</p>
