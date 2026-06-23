@@ -1,1 +1,3 @@
 Frontend with a live demo and explanation of the model in my [emotion-classification-model](https://github.com/luminescent11/emotion-classification-model) and [emotion-classification-api](https://github.com/luminescent11/emotion-classification-api) repositories.
+
+[Link to the deployed website](https://emotion-classification-frontend.vercel.app/)
