@@ -5,7 +5,7 @@ html {
     height: 100%;
 }
 
-html, body {
+html {
     overflow-x: hidden;
 }
 
@@ -541,6 +541,18 @@ button:active { transform: translateY(0); }
     color: #718096;
     font-size: 1.05rem;
     line-height: 1.65;
+}
+
+.subsection ul {
+    color: #718096;
+    font-size: 1.05rem;
+    line-height: 1.65;
+    padding-left: 1.25rem;
+    margin-top: 0.5rem;
+}
+
+.subsection ul li {
+    margin-bottom: 0.35rem;
 }
 
 /* ── Dataset chart ──────────────────────────────────────── */

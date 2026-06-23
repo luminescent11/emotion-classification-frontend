@@ -16,13 +16,14 @@
                 <li><h1 href="index.html" id="header-title">Emotion Classifier</h1></li>
                 <li></li>
 
-                <li><a href="" title="Notebook (WIP)">
+                <li><a href="https://colab.research.google.com/drive/1vFuc-dgZgUlzi1ZlMuFjrZaZBYHACZNC#scrollTo=cgNPw8whKp6h" title="Notebook (WIP)">
                     <img src="images/colab.png" alt="Notebook" class="icon"></img>
                 </a></li>
-                <li><a href="https://github.com/susamogus154/emotion-classification-api">
+                <li><a href="https://github.com/luminescent11/emotion-classification-api">
                     <img src="images/github.svg" alt="GitHub" class="icon"></img>
                 </a></li>
-                <li><a href="#how-it-works">How it works (WIP)</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="#how-it-works">How it works</a></li>
             </ul>
         </nav>
     </header>
@@ -111,23 +112,23 @@
         <div class="steps-grid">
             <div class="step-card">
                 <div class="step-number">01</div>
-                <h3>Input audio</h3>
-                <p>Record live or upload a .wav / .mp3 file. The model accepts up to 10 MB of audio and works best with clear, single-speaker recordings.</p>
+                <h3>Submit audio</h3>
+                <p>You record live or upload a file. The frontend validates the format and size, then sends the audio to the API backend as a POST request.</p>
             </div>
             <div class="step-card">
                 <div class="step-number">02</div>
-                <h3>Feature extraction</h3>
-                <p>The noisy raw audio data is converted into 768 features using Meta's HuBERT model.</p>
+                <h3>Preprocessing</h3>
+                <p>The server resamples the audio to 16 kHz, what the HuBERT feature extractor expects, and adjusts the waveform to match the format expected by HuBERT.</p>
             </div>
             <div class="step-card">
                 <div class="step-number">03</div>
-                <h3>Classification</h3>
-                <p>A neural network processes the features and outputs a probability distribution across seven emotion classes: angry, disgusted, fearful, happy, neutral, sad, and surprised.</p>
+                <h3>Feature extraction</h3>
+                <p>The noisy, preprocessed waveform is passed through the frozen HuBERT model, which outputs a more meaningful 768-dimensional embedding capturing speech features.</p>
             </div>
             <div class="step-card">
                 <div class="step-number">04</div>
-                <h3>Results</h3>
-                <p>The top predicted emotion and its confidence score are displayed alongside a radar chart showing the full probability distribution across all seven classes.</p>
+                <h3>Classification</h3>
+                <p>The 768 feautres from step 3 are fed through the classification head. The final softmax layer produces seven emotion class probabilities, which are returned as JSON and rendered in the UI in the radar chart and list above.</p>
             </div>
         </div>
         <div class="subsection">
@@ -137,10 +138,8 @@
                 <span class="badge-title">HuBERT · 2106.07447</span>
             </a>
             <p>This model first passes raw audio through a frozen, pretrained HuBERT model for feature extraction. HuBERT is a model that represents raw speech audio as a sequence of hidden units. You can find more information about HuBERT in the paper linked to the right. However, my model uses a frozen version of the HuBERT feature extractor, which takes raw, noisy audio as input and outputs a vector of 768 more meaningful features.</p>
-            <div class="arch-image-text">
-                <img src="images/classifier_head.png" alt="Neural network architecture diagram" class="nn-diagram">
-                <p>The extracted features are then fed into a classification head, a neural network with one hidden layer. This classification head is shown on the left, not to scale; the input layer has 768 features (the 768 outputs of the HuBERT feature extractor), the hidden layer has 64 neurons, a hyperparameter tuned during development, and the output layer has 7 neurons, one for each emotion class. The final layer applies a softmax activation to produce probability distributions. This means the outputs sum to 1 and can be interpreted as probabilities.</p>
-            </div>
+            <br>
+            <p>The extracted features are then fed into a classification head, a neural network with one hidden layer, illustrated in the diagram below. The input layer has 768 features (the 768 outputs of the HuBERT feature extractor), the hidden layer has 64 neurons, a hyperparameter tuned during development, and the output layer has 7 neurons, one for each emotion class. The final layer applies a softmax activation to produce probability distributions — the outputs sum to 1 and can be interpreted as class probabilities.</p>
 
             <svg class="pipeline-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 130">
                 <rect width="900" height="130" rx="12" fill="#f7fafc" stroke="#e2e8f0" stroke-width="1"/>
@@ -195,6 +194,87 @@
                 <text x="819" y="52" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="11" font-weight="700" fill="#1a1a2e">7 Emotions</text>
                 <text x="819" y="68" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="9" fill="#718096">probability</text>
                 <text x="819" y="82" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="9" fill="#718096">distribution</text>
+            </svg>
+
+            <!-- ── Neuron diagram ── -->
+            <svg class="pipeline-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 330" style="margin-top:1rem;">
+                <rect width="780" height="330" rx="12" fill="#fafafa" stroke="#e5e7eb" stroke-width="1"/>
+                <!-- input→hidden connections -->
+                <g stroke="#e5e7eb" stroke-width="0.7">
+                    <line x1="80" y1="30" x2="390" y2="68"/><line x1="80" y1="30" x2="390" y2="95"/><line x1="80" y1="30" x2="390" y2="122"/><line x1="80" y1="30" x2="390" y2="149"/><line x1="80" y1="30" x2="390" y2="176"/><line x1="80" y1="30" x2="390" y2="203"/><line x1="80" y1="30" x2="390" y2="230"/><line x1="80" y1="30" x2="390" y2="257"/>
+                    <line x1="80" y1="50" x2="390" y2="68"/><line x1="80" y1="50" x2="390" y2="95"/><line x1="80" y1="50" x2="390" y2="122"/><line x1="80" y1="50" x2="390" y2="149"/><line x1="80" y1="50" x2="390" y2="176"/><line x1="80" y1="50" x2="390" y2="203"/><line x1="80" y1="50" x2="390" y2="230"/><line x1="80" y1="50" x2="390" y2="257"/>
+                    <line x1="80" y1="70" x2="390" y2="68"/><line x1="80" y1="70" x2="390" y2="95"/><line x1="80" y1="70" x2="390" y2="122"/><line x1="80" y1="70" x2="390" y2="149"/><line x1="80" y1="70" x2="390" y2="176"/><line x1="80" y1="70" x2="390" y2="203"/><line x1="80" y1="70" x2="390" y2="230"/><line x1="80" y1="70" x2="390" y2="257"/>
+                    <line x1="80" y1="90" x2="390" y2="68"/><line x1="80" y1="90" x2="390" y2="95"/><line x1="80" y1="90" x2="390" y2="122"/><line x1="80" y1="90" x2="390" y2="149"/><line x1="80" y1="90" x2="390" y2="176"/><line x1="80" y1="90" x2="390" y2="203"/><line x1="80" y1="90" x2="390" y2="230"/><line x1="80" y1="90" x2="390" y2="257"/>
+                    <line x1="80" y1="110" x2="390" y2="68"/><line x1="80" y1="110" x2="390" y2="95"/><line x1="80" y1="110" x2="390" y2="122"/><line x1="80" y1="110" x2="390" y2="149"/><line x1="80" y1="110" x2="390" y2="176"/><line x1="80" y1="110" x2="390" y2="203"/><line x1="80" y1="110" x2="390" y2="230"/><line x1="80" y1="110" x2="390" y2="257"/>
+                    <line x1="80" y1="130" x2="390" y2="68"/><line x1="80" y1="130" x2="390" y2="95"/><line x1="80" y1="130" x2="390" y2="122"/><line x1="80" y1="130" x2="390" y2="149"/><line x1="80" y1="130" x2="390" y2="176"/><line x1="80" y1="130" x2="390" y2="203"/><line x1="80" y1="130" x2="390" y2="230"/><line x1="80" y1="130" x2="390" y2="257"/>
+                    <line x1="80" y1="150" x2="390" y2="68"/><line x1="80" y1="150" x2="390" y2="95"/><line x1="80" y1="150" x2="390" y2="122"/><line x1="80" y1="150" x2="390" y2="149"/><line x1="80" y1="150" x2="390" y2="176"/><line x1="80" y1="150" x2="390" y2="203"/><line x1="80" y1="150" x2="390" y2="230"/><line x1="80" y1="150" x2="390" y2="257"/>
+                    <line x1="80" y1="170" x2="390" y2="68"/><line x1="80" y1="170" x2="390" y2="95"/><line x1="80" y1="170" x2="390" y2="122"/><line x1="80" y1="170" x2="390" y2="149"/><line x1="80" y1="170" x2="390" y2="176"/><line x1="80" y1="170" x2="390" y2="203"/><line x1="80" y1="170" x2="390" y2="230"/><line x1="80" y1="170" x2="390" y2="257"/>
+                    <line x1="80" y1="190" x2="390" y2="68"/><line x1="80" y1="190" x2="390" y2="95"/><line x1="80" y1="190" x2="390" y2="122"/><line x1="80" y1="190" x2="390" y2="149"/><line x1="80" y1="190" x2="390" y2="176"/><line x1="80" y1="190" x2="390" y2="203"/><line x1="80" y1="190" x2="390" y2="230"/><line x1="80" y1="190" x2="390" y2="257"/>
+                    <line x1="80" y1="210" x2="390" y2="68"/><line x1="80" y1="210" x2="390" y2="95"/><line x1="80" y1="210" x2="390" y2="122"/><line x1="80" y1="210" x2="390" y2="149"/><line x1="80" y1="210" x2="390" y2="176"/><line x1="80" y1="210" x2="390" y2="203"/><line x1="80" y1="210" x2="390" y2="230"/><line x1="80" y1="210" x2="390" y2="257"/>
+                    <line x1="80" y1="230" x2="390" y2="68"/><line x1="80" y1="230" x2="390" y2="95"/><line x1="80" y1="230" x2="390" y2="122"/><line x1="80" y1="230" x2="390" y2="149"/><line x1="80" y1="230" x2="390" y2="176"/><line x1="80" y1="230" x2="390" y2="203"/><line x1="80" y1="230" x2="390" y2="230"/><line x1="80" y1="230" x2="390" y2="257"/>
+                    <line x1="80" y1="250" x2="390" y2="68"/><line x1="80" y1="250" x2="390" y2="95"/><line x1="80" y1="250" x2="390" y2="122"/><line x1="80" y1="250" x2="390" y2="149"/><line x1="80" y1="250" x2="390" y2="176"/><line x1="80" y1="250" x2="390" y2="203"/><line x1="80" y1="250" x2="390" y2="230"/><line x1="80" y1="250" x2="390" y2="257"/>
+                    <line x1="80" y1="270" x2="390" y2="68"/><line x1="80" y1="270" x2="390" y2="95"/><line x1="80" y1="270" x2="390" y2="122"/><line x1="80" y1="270" x2="390" y2="149"/><line x1="80" y1="270" x2="390" y2="176"/><line x1="80" y1="270" x2="390" y2="203"/><line x1="80" y1="270" x2="390" y2="230"/><line x1="80" y1="270" x2="390" y2="257"/>
+                    <line x1="80" y1="290" x2="390" y2="68"/><line x1="80" y1="290" x2="390" y2="95"/><line x1="80" y1="290" x2="390" y2="122"/><line x1="80" y1="290" x2="390" y2="149"/><line x1="80" y1="290" x2="390" y2="176"/><line x1="80" y1="290" x2="390" y2="203"/><line x1="80" y1="290" x2="390" y2="230"/><line x1="80" y1="290" x2="390" y2="257"/>
+                </g>
+                <!-- hidden→output connections -->
+                <g stroke="#e5e7eb" stroke-width="0.7">
+                    <line x1="390" y1="68" x2="640" y2="75"/><line x1="390" y1="68" x2="640" y2="105"/><line x1="390" y1="68" x2="640" y2="135"/><line x1="390" y1="68" x2="640" y2="165"/><line x1="390" y1="68" x2="640" y2="195"/><line x1="390" y1="68" x2="640" y2="225"/><line x1="390" y1="68" x2="640" y2="255"/>
+                    <line x1="390" y1="95" x2="640" y2="75"/><line x1="390" y1="95" x2="640" y2="105"/><line x1="390" y1="95" x2="640" y2="135"/><line x1="390" y1="95" x2="640" y2="165"/><line x1="390" y1="95" x2="640" y2="195"/><line x1="390" y1="95" x2="640" y2="225"/><line x1="390" y1="95" x2="640" y2="255"/>
+                    <line x1="390" y1="122" x2="640" y2="75"/><line x1="390" y1="122" x2="640" y2="105"/><line x1="390" y1="122" x2="640" y2="135"/><line x1="390" y1="122" x2="640" y2="165"/><line x1="390" y1="122" x2="640" y2="195"/><line x1="390" y1="122" x2="640" y2="225"/><line x1="390" y1="122" x2="640" y2="255"/>
+                    <line x1="390" y1="149" x2="640" y2="75"/><line x1="390" y1="149" x2="640" y2="105"/><line x1="390" y1="149" x2="640" y2="135"/><line x1="390" y1="149" x2="640" y2="165"/><line x1="390" y1="149" x2="640" y2="195"/><line x1="390" y1="149" x2="640" y2="225"/><line x1="390" y1="149" x2="640" y2="255"/>
+                    <line x1="390" y1="176" x2="640" y2="75"/><line x1="390" y1="176" x2="640" y2="105"/><line x1="390" y1="176" x2="640" y2="135"/><line x1="390" y1="176" x2="640" y2="165"/><line x1="390" y1="176" x2="640" y2="195"/><line x1="390" y1="176" x2="640" y2="225"/><line x1="390" y1="176" x2="640" y2="255"/>
+                    <line x1="390" y1="203" x2="640" y2="75"/><line x1="390" y1="203" x2="640" y2="105"/><line x1="390" y1="203" x2="640" y2="135"/><line x1="390" y1="203" x2="640" y2="165"/><line x1="390" y1="203" x2="640" y2="195"/><line x1="390" y1="203" x2="640" y2="225"/><line x1="390" y1="203" x2="640" y2="255"/>
+                    <line x1="390" y1="230" x2="640" y2="75"/><line x1="390" y1="230" x2="640" y2="105"/><line x1="390" y1="230" x2="640" y2="135"/><line x1="390" y1="230" x2="640" y2="165"/><line x1="390" y1="230" x2="640" y2="195"/><line x1="390" y1="230" x2="640" y2="225"/><line x1="390" y1="230" x2="640" y2="255"/>
+                    <line x1="390" y1="257" x2="640" y2="75"/><line x1="390" y1="257" x2="640" y2="105"/><line x1="390" y1="257" x2="640" y2="135"/><line x1="390" y1="257" x2="640" y2="165"/><line x1="390" y1="257" x2="640" y2="195"/><line x1="390" y1="257" x2="640" y2="225"/><line x1="390" y1="257" x2="640" y2="255"/>
+                </g>
+                <!-- input neurons (14, r=7) -->
+                <g fill="#ffffff" stroke="#9ca3af" stroke-width="1.5">
+                    <circle cx="80" cy="30" r="7"/><circle cx="80" cy="50" r="7"/><circle cx="80" cy="70" r="7"/><circle cx="80" cy="90" r="7"/><circle cx="80" cy="110" r="7"/>
+                    <circle cx="80" cy="130" r="7"/><circle cx="80" cy="150" r="7"/><circle cx="80" cy="170" r="7"/><circle cx="80" cy="190" r="7"/><circle cx="80" cy="210" r="7"/>
+                    <circle cx="80" cy="230" r="7"/><circle cx="80" cy="250" r="7"/><circle cx="80" cy="270" r="7"/><circle cx="80" cy="290" r="7"/>
+                </g>
+                <!-- hidden neurons (8, r=9) -->
+                <g fill="#ffffff" stroke="#9ca3af" stroke-width="1.5">
+                    <circle cx="390" cy="68" r="9"/><circle cx="390" cy="95" r="9"/><circle cx="390" cy="122" r="9"/>
+                    <circle cx="390" cy="149" r="9"/><circle cx="390" cy="176" r="9"/><circle cx="390" cy="203" r="9"/>
+                    <circle cx="390" cy="230" r="9"/><circle cx="390" cy="257" r="9"/>
+                </g>
+                <!-- output neurons (7, r=9) -->
+                <g fill="#ffffff" stroke="#9ca3af" stroke-width="1.5">
+                    <circle cx="640" cy="75" r="9"/><circle cx="640" cy="105" r="9"/><circle cx="640" cy="135" r="9"/>
+                    <circle cx="640" cy="165" r="9"/><circle cx="640" cy="195" r="9"/><circle cx="640" cy="225" r="9"/>
+                    <circle cx="640" cy="255" r="9"/>
+                </g>
+                <!-- pseudo-layer rects -->
+                <g font-family="Segoe UI,system-ui,sans-serif" font-size="8" font-weight="600" fill="#374151" text-anchor="middle" dominant-baseline="middle">
+                    <rect x="120" y="149" width="70" height="22" rx="4" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+                    <text x="155" y="160">BatchNorm1d</text>
+                    <rect x="208" y="149" width="46" height="22" rx="4" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+                    <text x="231" y="160">ReLU</text>
+                    <rect x="272" y="149" width="65" height="22" rx="4" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+                    <text x="304" y="160">Dropout</text>
+                    <rect x="487" y="149" width="58" height="22" rx="4" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+                    <text x="516" y="160">Softmax</text>
+                </g>
+                <!-- emotion labels -->
+                <g font-family="Segoe UI,system-ui,sans-serif" font-size="9.5" fill="#6b7280" dominant-baseline="middle">
+                    <text x="655" y="75">Angry</text>
+                    <text x="655" y="105">Disgusted</text>
+                    <text x="655" y="135">Fearful</text>
+                    <text x="655" y="165">Happy</text>
+                    <text x="655" y="195">Neutral</text>
+                    <text x="655" y="225">Sad</text>
+                    <text x="655" y="255">Surprised</text>
+                </g>
+                <!-- layer labels -->
+                <g font-family="Segoe UI,system-ui,sans-serif" text-anchor="middle">
+                    <text x="80" y="308" font-size="9.5" font-weight="700" fill="#374151">Input</text>
+                    <text x="80" y="320" font-size="8.5" fill="#9ca3af">768 units</text>
+                    <text x="390" y="308" font-size="9.5" font-weight="700" fill="#374151">Hidden</text>
+                    <text x="390" y="320" font-size="8.5" fill="#9ca3af">64 units</text>
+                    <text x="640" y="308" font-size="9.5" font-weight="700" fill="#374151">Output</text>
+                    <text x="640" y="320" font-size="8.5" fill="#9ca3af">7 classes</text>
+                </g>
             </svg>
         </div>
 
@@ -271,13 +351,14 @@
         <div class="subsection">
             <h3>Failure Cases</h3>
             <p>All audio samples that the model trains on are very clean, very clear clips recorded by professional voice actors. In cases with noisy audio (low-quality microphone or loud background noise) or subtle emotion cues, the model's performance may significantly decrease.</p>
+            <br>
             <p>Additionally, the surprised class is underrepresented in the dataset, making up less than 5% of the samples. Thus, the model may struggle to generalize to new surprised audio.</p>
         </div>
 
         <div class="subsection">
             <h3>Stack</h3>
             <br>
-            <div>These are the main frameworks and libraries used in model and API development:</div>
+            <p>These are the main frameworks and libraries used in model and API development:</p>
             <div class="stack-grid">
                 <div class="stack-card">
                     <img src="images/icons/pytorch.png" alt="PyTorch logo" class="stack-logo">
@@ -312,9 +393,14 @@
             </div>
         </div>
 
-        <div class="section-header" style="padding-top: 2.5rem; padding-bottom: 0;">
-            <h2>Limitations & Future Directions</h2>
-            <p class="section-subtitle">Audio is too clean, and the surprised class is underrepresented. Future work includes addressing these limitations through data augmentations. Additionally, unfreezing the last few layers of the HuBERT model (or the whole thing) may significantly improve performance, at the cost of adding complexity and computational cost. Using other metrics (F1 score, per-class precision and recall) to evaluate performance may provide a more comprehensive model performance assessment.</p>
+        <div class="subsection">
+            <h3>Limitations & Future Directions</h3>
+            <p class="section-subtitle">Audio is too clean, and the surprised class is underrepresented. Future work includes:</p>
+            <ul>
+                <li>Data augmentation and collection to improve model generalization.</li>
+                <li>Unfreezing the last few layers of the HuBERT model (or the whole thing) and training them to improve performance.</li>
+                <li>Using other metrics (F1 score, per-class precision and recall) to evaluate performance during development.</li>
+            </ul>
         </div>
     </section>
 </body>
