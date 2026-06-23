@@ -36,13 +36,18 @@
 
             Specifically, the article states that diagnosing these sorts of conditions was initially done "by using invasive devices and medical assessments", and that "Automatic emotion recognition methods assist doctors ... in accurately identifying diseases associated with emotional features in real time". Monitoring these patients could be done autonomously by processing their live data and predicting emotions using such a machine learning model, allowing doctors to draw conclusions based on a large quantity of patient emotion data; for example, fluctuations in patient emotion.
 
-            Additionally, this sort of tool used in healthcare has the potential to save doctors' time (so they can focus on other aspects of patient care and treat more patients) by automating the tedious process of analyzing patients' emotions.
+            This sort of tool used in healthcare has the potential to save doctors' time (so they can focus on other aspects of patient care and treat more patients) by automating the tedious process of analyzing patients' emotions. Additionally, model performance on this task potentially surpasses doctors', highlighting the need to design such a system for patient care:
         </p>
-        <p>
+        <p id="quote">
             "patients with conditions such as epilepsy, stroke, facial paralysis, facial numbness, and coma ... cannot express real emotions through objective external features (such as language and facial expressions) and autonomous behaviors. Therefore, it is necessary to design an automated system to effectively detect the emotions of such patients."
         </p>
     </section>
 
+    <section id="demo">
+    <div class="section-header">
+        <h2>Try the Demo</h2>
+        <p class="section-subtitle">Upload an audio file or record your voice to classify its emotional content.</p>
+    </div>
     <div class="main-container">
         <div class="left-column">
             <div class="control-section">
@@ -92,13 +97,16 @@
             </div>
         </div>
     </div>
+    </section>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
     <script src="script.js"></script>
 
     <section id="how-it-works">
+    <div class="section-header">
         <h2>How it works</h2>
-        <p class="section-subtitle">A fine-tuned speech emotion recognition model trained on the RAVDESS dataset</p>
+        <p class="section-subtitle">A fine-tuned speech emotion recognition model trained on the RAVDESS dataset.</p>
+    </div>
         <div class="steps-grid">
             <div class="step-card">
                 <div class="step-number">01</div>
@@ -108,14 +116,81 @@
             <div class="step-card">
                 <div class="step-number">02</div>
                 <h3>Feature extraction</h3>
-                <p>The audio is converted into Mel-frequency cepstral coefficients (MFCCs) and a mel spectrogram — compact numerical representations of the sound's tonal and rhythmic character.</p>
+                <p>The noisy raw audio data is converted into 768 features using Meta's HuBERT model.</p>
             </div>
             <div class="step-card">
                 <div class="step-number">03</div>
                 <h3>Classification</h3>
-                <p>A fine-tuned neural network processes the features and outputs a probability distribution across seven emotion classes: angry, disgusted, fearful, happy, neutral, sad, and surprised.</p>
+                <p>A neural network processes the features and outputs a probability distribution across seven emotion classes: angry, disgusted, fearful, happy, neutral, sad, and surprised.</p>
             </div>
+            <div class="step-card">
+                <div class="step-number">04</div>
+                <h3>Results</h3>
+                <p>The top predicted emotion and its confidence score are displayed alongside a radar chart showing the full probability distribution across all seven classes.</p>
+            </div>
+        </div>
+        <div class="subsection">
+            <h3>Architecture Overview</h3>
+            <a href="https://arxiv.org/abs/2106.07447" class="paper-badge arch-badge" target="_blank" rel="noopener" title="HuBERT: Self-Supervised Speech Representation Learning by Masked Prediction of Hidden Units">
+                <span class="badge-provider">arXiv</span>
+                <span class="badge-title">HuBERT · 2106.07447</span>
+            </a>
+            <p>[Placeholder — describe the model architecture at a high level: what kind of network, how many layers, how features feed into the classifier, and how the output probabilities are produced.]</p>
+            <img src="images/classifier_head.png" alt="Neural network architecture diagram" class="nn-diagram">
+        </div>
+
+        <div class="subsection">
+            <h3>Dataset</h3>
+            <p>The model is trained on a compilation of multiple audio emotion datasets, with 12798 labeled samples in total. The full dataset can be found at <b><a href="https://www.kaggle.com/datasets/uldisvalainis/audio-emotions?resource=download-directory" target="_blank" rel="noopener noreferrer">this kaggle link</a></b>, and includes RAVDESS, CREMA-D (makes up majority), TESS, and SAVEE. Each label was one of the 7 emotions used in this demo: angry, disgusted, fearful, happy, neutral, sad, and surprised.</p>
+            <div class="dataset-chart-wrap">
+                <canvas id="dataset-chart"></canvas>
+            </div>
+        </div>
+
+        <div class="subsection">
+            <h3>Metrics</h3>
+            <p>This model was only evaluated on accuracy. The original mel spectrogram approach gave 73% validation accuracy. Using a frozen HuBERT model improved the accuracy to 79% on the testing dataset.</p>
+        </div>
+
+        <div class="subsection">
+            <h3>Technical Decision</h3>
+            <p>Show earlier mel spectrograms and confusion matrix/performance stats</p>
+        </div>
+
+        <div class="subsection">
+            <h3>Failure Cases</h3>
+            <p>All audio samples that the model trains on are very clean, very clear clips recorded by professional voice actors. In cases with noisy audio (low-quality microphone or loud background noise) or subtle emotion cues, the model's performance may significantly decrease.</p>
+            <p>Additionally, the surprised class is underrepresented in the dataset, making up less than 5% of the samples. Thus, the model may struggle to generalize to new surprised audio.</p>
+        </div>
+
+        <div class="subsection">
+            <h3>Stack</h3>
+            <p>PyTorch, NumPy, Hugging Face Transformers, librosa, scikit-learn, uvicorn, fastapi</p>
+        </div>
+
+        <div class="section-header" style="padding-top: 2.5rem; padding-bottom: 0;">
+            <h2>Limitations & Future Directions</h2>
+            <p class="section-subtitle">Audio is too clean, and the surprised class is underrepresented. Future work includes addressing these limitations through data augmentations. Additionally, unfreezing the last few layers of the HuBERT model (or the whole thing) may significantly improve performance, at the cost of adding complexity and computational cost. Using other metrics (F1 score, per-class precision and recall) to evaluate performance may provide a more comprehensive model performance assessment.</p>
         </div>
     </section>
 </body>
 </html>
+
+<!--
+Generalization – weight_decay 1e-2, lr0=1e-3, lrschedulre patience 3 factor 0.5, dropout 0.6, batchnorm, hidden layer in classifier head of size 64
+            precision    recall  f1-score   support
+
+       Angry       0.89      0.85      0.87       216
+   Disgusted       0.76      0.81      0.78       180
+     Fearful       0.79      0.70      0.74       184
+       Happy       0.74      0.77      0.75       203
+     Neutral       0.75      0.87      0.80       178
+         Sad       0.77      0.72      0.75       248
+   Surprised       0.93      0.90      0.91        71
+
+    accuracy                           0.79      1280
+   macro avg       0.80      0.80      0.80      1280
+weighted avg       0.79      0.79      0.79      1280
+
+
+>

@@ -1,3 +1,53 @@
+const datasetColors = {
+    Angry:     '#e53e3e',
+    Happy:     '#38a169',
+    Sad:       '#3182ce',
+    Neutral:   '#718096',
+    Fearful:   '#dd6b20',
+    Disgusted: '#6f42c1',
+    Surprised: '#0bc5ea',
+};
+
+const datasetCounts = {
+    Angry:     2167,
+    Happy:     2167,
+    Sad:       2167,
+    Neutral:   1795,
+    Fearful:   2047,
+    Disgusted: 1863,
+    Surprised: 592,
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    new Chart(document.getElementById('dataset-chart'), {
+        type: 'bar',
+        data: {
+            labels: Object.keys(datasetCounts),
+            datasets: [{
+                data: Object.values(datasetCounts),
+                backgroundColor: Object.keys(datasetCounts).map(k => datasetColors[k] + 'cc'),
+                borderColor:     Object.keys(datasetCounts).map(k => datasetColors[k]),
+                borderWidth: 2,
+                borderRadius: 6,
+            }]
+        },
+        options: {
+            plugins: { legend: { display: false } },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: '#e2e8f0' },
+                    ticks: { color: '#718096', font: { size: 12 } },
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#4a5568', font: { size: 13, weight: '600' } },
+                }
+            }
+        }
+    });
+});
+
 const emotions = {
     "Angry": 0,
     "Disgusted": 0,
