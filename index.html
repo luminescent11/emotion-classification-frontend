@@ -6,6 +6,8 @@
     <title>Emotion Classifier</title>
     <link rel="icon" href="images/favicon.png" type="image/png">
     <link rel="stylesheet" href="style.css">
+    <script>MathJax = { tex: { inlineMath: [['$','$']] } };</script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
 </head>
 <body>
     <header id="header">
@@ -32,11 +34,10 @@
         </a>
         <h2>Classifying Emotions using Audio - Introduction</h2>
         <p>
-            While classifying emotions in audio recordings may seem to not have real-world applications, this NIH article on the right explores the massive amount of research conducted in this field to make complex models for emotional analysis, not just from audio, but also from other data such as facial features. Obviously, all this development was not done just to achieve a higher accuracy number: the article also explains how this research is directly applicable in healthcare for diagnosing, treating, and monitoring patients with psychological and neurological conditions.
-
-            Specifically, the article states that diagnosing these sorts of conditions was initially done "by using invasive devices and medical assessments", and that "Automatic emotion recognition methods assist doctors ... in accurately identifying diseases associated with emotional features in real time". Monitoring these patients could be done autonomously by processing their live data and predicting emotions using such a machine learning model, allowing doctors to draw conclusions based on a large quantity of patient emotion data; for example, fluctuations in patient emotion.
-
-            This sort of tool used in healthcare has the potential to save doctors' time (so they can focus on other aspects of patient care and treat more patients) by automating the tedious process of analyzing patients' emotions. Additionally, model performance on this task potentially surpasses doctors', highlighting the need to design such a system for patient care:
+            While classifying emotions in audio recordings may seem to not have real-world applications, this NIH article on the right explores the massive amount of research conducted in this field to make complex models for emotional analysis. This research is directly applicable in healthcare for diagnosing, treating, and monitoring patients with psychological and neurological conditions.
+        </p>
+        <p>
+            This sort of tool used in healthcare has the potential to save doctors' time (so they can focus on other aspects of patient care and treat more patients) by automating the tedious process of analyzing patients' emotions. Additionally, model performance on this task can surpass doctors', highlighting the need to design such a system for patient care:
         </p>
         <p id="quote">
             "patients with conditions such as epilepsy, stroke, facial paralysis, facial numbness, and coma ... cannot express real emotions through objective external features (such as language and facial expressions) and autonomous behaviors. Therefore, it is necessary to design an automated system to effectively detect the emotions of such patients."
@@ -135,8 +136,66 @@
                 <span class="badge-provider">arXiv</span>
                 <span class="badge-title">HuBERT · 2106.07447</span>
             </a>
-            <p>[Placeholder — describe the model architecture at a high level: what kind of network, how many layers, how features feed into the classifier, and how the output probabilities are produced.]</p>
-            <img src="images/classifier_head.png" alt="Neural network architecture diagram" class="nn-diagram">
+            <p>This model first passes raw audio through a frozen, pretrained HuBERT model for feature extraction. HuBERT is a model that represents raw speech audio as a sequence of hidden units. You can find more information about HuBERT in the paper linked to the right. However, my model uses a frozen version of the HuBERT feature extractor, which takes raw, noisy audio as input and outputs a vector of 768 more meaningful features.</p>
+            <div class="arch-image-text">
+                <img src="images/classifier_head.png" alt="Neural network architecture diagram" class="nn-diagram">
+                <p>The extracted features are then fed into a classification head, a neural network with one hidden layer. This classification head is shown on the left, not to scale; the input layer has 768 features (the 768 outputs of the HuBERT feature extractor), the hidden layer has 64 neurons, a hyperparameter tuned during development, and the output layer has 7 neurons, one for each emotion class. The final layer applies a softmax activation to produce probability distributions. This means the outputs sum to 1 and can be interpreted as probabilities.</p>
+            </div>
+
+            <svg class="pipeline-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 130">
+                <rect width="900" height="130" rx="12" fill="#f7fafc" stroke="#e2e8f0" stroke-width="1"/>
+                <!-- Audio Input -->
+                <rect x="10" y="40" width="90" height="50" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+                <text x="55" y="62" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="11" font-weight="700" fill="#1a1a2e">Audio</text>
+                <text x="55" y="78" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="9" fill="#718096">raw input</text>
+                <!-- Arrow 1 -->
+                <line x1="100" y1="65" x2="130" y2="65" stroke="#cbd5e0" stroke-width="1.5"/>
+                <polygon points="130,61 138,65 130,69" fill="#cbd5e0"/>
+                <!-- HuBERT -->
+                <rect x="140" y="30" width="135" height="70" rx="8" fill="#ede9fe" stroke="#4f46e5" stroke-width="1.5"/>
+                <text x="208" y="52" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="13" font-weight="700" fill="#4f46e5">HuBERT</text>
+                <text x="208" y="68" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="9" fill="#6d28d9">self-supervised</text>
+                <text x="208" y="82" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="9" fill="#6d28d9">speech transformer</text>
+                <!-- Arrow 2 + label -->
+                <line x1="275" y1="65" x2="310" y2="65" stroke="#cbd5e0" stroke-width="1.5"/>
+                <polygon points="310,61 318,65 310,69" fill="#cbd5e0"/>
+                <text x="296" y="56" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="9" fill="#718096">768-dim</text>
+                <!-- Classification Head group -->
+                <rect x="320" y="23" width="252" height="84" rx="8" fill="#f0fdf4" stroke="#38a169" stroke-width="1.5" stroke-dasharray="5 3"/>
+                <text x="446" y="39" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="8.5" font-weight="700" letter-spacing="0.06em" fill="#276749">CLASSIFICATION HEAD</text>
+                <!-- Linear 768→64 -->
+                <rect x="330" y="47" width="63" height="34" rx="5" fill="#dcfce7" stroke="#38a169" stroke-width="1"/>
+                <text x="362" y="61" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="9" font-weight="700" fill="#276749">Linear</text>
+                <text x="362" y="73" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="8" fill="#276749">768→64</text>
+                <!-- mini arrow 1 -->
+                <line x1="393" y1="64" x2="405" y2="64" stroke="#38a169" stroke-width="1"/>
+                <polygon points="405,61 410,64 405,67" fill="#38a169"/>
+                <!-- ReLU -->
+                <rect x="410" y="47" width="48" height="34" rx="5" fill="#dcfce7" stroke="#38a169" stroke-width="1"/>
+                <text x="434" y="68" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="9" font-weight="700" fill="#276749">ReLU</text>
+                <!-- mini arrow 2 -->
+                <line x1="458" y1="64" x2="470" y2="64" stroke="#38a169" stroke-width="1"/>
+                <polygon points="470,61 475,64 470,67" fill="#38a169"/>
+                <!-- Linear 64→7 -->
+                <rect x="475" y="47" width="63" height="34" rx="5" fill="#dcfce7" stroke="#38a169" stroke-width="1"/>
+                <text x="507" y="61" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="9" font-weight="700" fill="#276749">Linear</text>
+                <text x="507" y="73" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="8" fill="#276749">64→7</text>
+                <!-- Arrow 3 -->
+                <line x1="572" y1="65" x2="607" y2="65" stroke="#cbd5e0" stroke-width="1.5"/>
+                <polygon points="607,61 615,65 607,69" fill="#cbd5e0"/>
+                <!-- Softmax -->
+                <rect x="617" y="40" width="90" height="50" rx="8" fill="#fff5f5" stroke="#e53e3e" stroke-width="1.5"/>
+                <text x="662" y="62" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="11" font-weight="700" fill="#c53030">Softmax</text>
+                <text x="662" y="78" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="9" fill="#c53030">activation</text>
+                <!-- Arrow 4 -->
+                <line x1="707" y1="65" x2="742" y2="65" stroke="#cbd5e0" stroke-width="1.5"/>
+                <polygon points="742,61 750,65 742,69" fill="#cbd5e0"/>
+                <!-- 7 Emotions output -->
+                <rect x="752" y="30" width="135" height="70" rx="8" fill="#ffffff" stroke="#4a5568" stroke-width="1.5"/>
+                <text x="819" y="52" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="11" font-weight="700" fill="#1a1a2e">7 Emotions</text>
+                <text x="819" y="68" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="9" fill="#718096">probability</text>
+                <text x="819" y="82" text-anchor="middle" font-family="Segoe UI,system-ui,sans-serif" font-size="9" fill="#718096">distribution</text>
+            </svg>
         </div>
 
         <div class="subsection">
@@ -149,12 +208,64 @@
 
         <div class="subsection">
             <h3>Metrics</h3>
-            <p>This model was only evaluated on accuracy. The original mel spectrogram approach gave 73% validation accuracy. Using a frozen HuBERT model improved the accuracy to 79% on the testing dataset.</p>
+            <p>This model was only evaluated on accuracy during development; however, more detailed metrics were evaluated on the final model. The original mel spectrogram approach gave 73% validation accuracy. Using a frozen HuBERT model improved the accuracy to 79% on the testing dataset.</p>
+
+            <div class="metrics-table-wrap">
+                <table class="metrics-table">
+                    <thead>
+                        <tr>
+                            <th>Class</th>
+                            <th>Precision</th>
+                            <th>Recall</th>
+                            <th>F1-Score</th>
+                            <th>Support</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Angry</td>    <td>0.89</td><td>0.85</td><td>0.87</td><td>216</td></tr>
+                        <tr><td>Disgusted</td><td>0.76</td><td>0.81</td><td>0.78</td><td>180</td></tr>
+                        <tr><td>Fearful</td>  <td>0.79</td><td>0.70</td><td>0.74</td><td>184</td></tr>
+                        <tr><td>Happy</td>    <td>0.74</td><td>0.77</td><td>0.75</td><td>203</td></tr>
+                        <tr><td>Neutral</td>  <td>0.75</td><td>0.87</td><td>0.80</td><td>178</td></tr>
+                        <tr><td>Sad</td>      <td>0.77</td><td>0.72</td><td>0.75</td><td>248</td></tr>
+                        <tr><td>Surprised</td><td>0.93</td><td>0.90</td><td>0.91</td><td>71</td></tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="tfoot-divider"><td>Accuracy</td><td colspan="2"></td><td>0.79</td><td>1280</td></tr>
+                        <tr><td>Macro avg</td>   <td>0.80</td><td>0.80</td><td>0.80</td><td>1280</td></tr>
+                        <tr><td>Weighted avg</td><td>0.79</td><td>0.79</td><td>0.79</td><td>1280</td></tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="formula-defs">
+                <div class="formula-def">
+                    <div class="formula-name">Precision</div>
+                    $$\text{Precision} = \frac{TP}{TP + FP}$$
+                    <p class="formula-desc">Precision measures the portion of correct predictions among all positive predictions. this is important for minimizing the amount of times where the model produces false positives. For example, positive predictions in an implemented model may waste resources.</p>
+                </div>
+                <div class="formula-def">
+                    <div class="formula-name">Recall</div>
+                    $$\text{Recall} = \frac{TP}{TP + FN}$$
+                    <p class="formula-desc">Recall measures the portion of actual positives that were identified: important for minimizing the amount of times where the model misses positive cases; for example, in medical diagnoses.</p>
+                </div>
+                <div class="formula-def">
+                    <div class="formula-name">F1-Score</div>
+                    $$F_1 = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}$$
+                    <p class="formula-desc">The F1-Score is the harmonic mean of precision and recall, a single metric balancing both numbers.</p>
+                </div>
+            </div>
         </div>
 
         <div class="subsection">
             <h3>Technical Decision</h3>
-            <p>Show earlier mel spectrograms and confusion matrix/performance stats</p>
+            <div class="two-col-layout">
+                <p>My first approach was converting audio into a mel spectrogram image (two examples shown on the right) and using a CNN classifier and computer vision techniques to classify the audio data. However, the better approach was using a state-of-the-art pretrained model like HuBERT for feature extraction.</p>
+                <div class="img-placeholder-group">
+                    <img src="images/angry_spectrogram.png" alt="Mel spectrogram of an angry audio sample">
+                    <img src="images/sad_spectrogram.png" alt="Mel spectrogram of an sad audio sample">
+                </div>
+            </div>
         </div>
 
         <div class="subsection">
@@ -165,7 +276,40 @@
 
         <div class="subsection">
             <h3>Stack</h3>
-            <p>PyTorch, NumPy, Hugging Face Transformers, librosa, scikit-learn, uvicorn, fastapi</p>
+            <br>
+            <div>These are the main frameworks and libraries used in model and API development:</div>
+            <div class="stack-grid">
+                <div class="stack-card">
+                    <img src="images/icons/pytorch.png" alt="PyTorch logo" class="stack-logo">
+                    <div class="stack-name">PyTorch</div>
+                    <div class="stack-hover-desc">The essential deep learning framework for model development.</div>
+                </div>
+                <div class="stack-card">
+                    <img src="images/icons/numpy.png" alt="NumPy logo" class="stack-logo">
+                    <div class="stack-name">NumPy</div>
+                    <div class="stack-hover-desc">NumPy is a fundamental package for the necessary mathematics in machine learning.</div>
+                </div>
+                <div class="stack-card">
+                    <img src="images/icons/hugging_face.png" alt="Hugging Face logo" class="stack-logo">
+                    <div class="stack-name">Hugging Face</div>
+                    <div class="stack-hover-desc">Hugging Face provides many publicly available pre-trained, state-of-the-art models.</div>
+                </div>
+                <div class="stack-card">
+                    <img src="images/icons/librosa.png" alt="librosa logo" class="stack-logo">
+                    <div class="stack-name">librosa</div>
+                    <div class="stack-hover-desc">Librosa is a Python library for music and audio analysis, used for .</div>
+                </div>
+                <div class="stack-card">
+                    <img src="images/icons/uvicorn.png" alt="uvicorn logo" class="stack-logo">
+                    <div class="stack-name">uvicorn</div>
+                    <div class="stack-hover-desc">Uvicorn connects the HTTPS requests to the FastAPI endpoints.</div>
+                </div>
+                <div class="stack-card">
+                    <img src="images/icons/fastapi.png" alt="FastAPI logo" class="stack-logo">
+                    <div class="stack-name">FastAPI</div>
+                    <div class="stack-hover-desc">FastAPI is used for building the API endpoints. Storing the whole model in the frontend would be extremely computationally expensive.</div>
+                </div>
+            </div>
         </div>
 
         <div class="section-header" style="padding-top: 2.5rem; padding-bottom: 0;">
@@ -175,22 +319,3 @@
     </section>
 </body>
 </html>
-
-<!--
-Generalization – weight_decay 1e-2, lr0=1e-3, lrschedulre patience 3 factor 0.5, dropout 0.6, batchnorm, hidden layer in classifier head of size 64
-            precision    recall  f1-score   support
-
-       Angry       0.89      0.85      0.87       216
-   Disgusted       0.76      0.81      0.78       180
-     Fearful       0.79      0.70      0.74       184
-       Happy       0.74      0.77      0.75       203
-     Neutral       0.75      0.87      0.80       178
-         Sad       0.77      0.72      0.75       248
-   Surprised       0.93      0.90      0.91        71
-
-    accuracy                           0.79      1280
-   macro avg       0.80      0.80      0.80      1280
-weighted avg       0.79      0.79      0.79      1280
-
-
->

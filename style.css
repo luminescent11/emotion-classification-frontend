@@ -567,6 +567,103 @@ button:active { transform: translateY(0); }
     display: block;
 }
 
+.arch-image-text {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    margin-top: 0.75rem;
+}
+
+.arch-image-text .nn-diagram {
+    flex: 0 0 200px;
+    max-width: 200px;
+}
+
+.arch-image-text > p { flex: 1; }
+
+.pipeline-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-top: 1.5rem;
+    border-radius: 12px;
+}
+
+/* ── Stack cards ────────────────────────────────────────── */
+.stack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-top: 0.75rem;
+}
+
+.stack-card {
+    position: relative;
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 1.25rem 1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    overflow: hidden;
+    cursor: default;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.stack-card:hover {
+    border-color: #4f46e5;
+    box-shadow: 0 4px 12px rgba(79,70,229,0.12);
+}
+
+.stack-logo {
+    width: 64px;
+    height: 64px;
+    background: #e2e8f0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    color: #a0aec0;
+    text-align: center;
+    overflow: hidden;
+}
+
+.stack-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 6px;
+}
+
+.stack-name {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    text-align: center;
+}
+
+.stack-hover-desc {
+    position: absolute;
+    inset: 0;
+    background: rgba(26, 26, 46, 0.92);
+    border-radius: 10px;
+    padding: 0.75rem;
+    color: #e2e8f0;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    opacity: 0;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.stack-card:hover .stack-hover-desc { opacity: 1; }
+
 .paper-badge {
     display: inline-flex;
     align-items: stretch;
@@ -599,6 +696,115 @@ button:active { transform: translateY(0); }
     background: #ffffff;
     display: flex;
     align-items: center;
+}
+
+/* ── Metrics table ─────────────────────────────────────── */
+.metrics-table-wrap {
+    overflow-x: auto;
+    margin-top: 1.25rem;
+}
+
+.metrics-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.metrics-table th {
+    background-color: #f7fafc;
+    color: #718096;
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.6rem 1rem;
+    text-align: right;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.metrics-table th:first-child { text-align: left; }
+
+.metrics-table td {
+    padding: 0.5rem 1rem;
+    text-align: right;
+    color: #4a5568;
+    border-bottom: 1px solid #f0f2f5;
+}
+
+.metrics-table td:first-child {
+    text-align: left;
+    font-weight: 600;
+    color: #1a1a2e;
+}
+
+.metrics-table tfoot tr { background-color: #f7fafc; }
+.metrics-table .tfoot-divider td { border-top: 2px solid #e2e8f0; }
+
+/* ── Formula definitions ───────────────────────────────── */
+.formula-defs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.formula-def {
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+}
+
+.formula-name {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #718096;
+    margin-bottom: 0.5rem;
+}
+
+.formula-desc {
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
+    color: #718096;
+    line-height: 1.5;
+    text-align: left;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 0.6rem;
+}
+
+/* ── Two-column layout (technical decision) ────────────── */
+.two-col-layout {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    margin-top: 0.25rem;
+}
+
+.two-col-layout > p { flex: 1; }
+
+.img-placeholder-group {
+    display: flex;
+    flex-direction: row;
+    gap: 0.75rem;
+    flex: 0 0 260px;
+}
+
+.img-placeholder {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #f0f2f5;
+    border: 2px dashed #cbd5e0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: #a0aec0;
+    text-align: center;
+    padding: 0.5rem;
 }
 
 /* ── Accessibility ─────────────────────────────────────── */
