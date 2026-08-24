@@ -197,10 +197,10 @@ function hideLoading() {
 
 /* This is the API/server interaction logic */
 
-let API_URL = "https://emotions-api-1043697508655.us-central1.run.app"
+let API_URL = "https://emotion-classification-api-production.up.railway.app/"
 let API_URL_LOCAL = "http://localhost:8000"
 
-let localTesting = false
+const localTesting = false
 if (localTesting) {
     API_URL = API_URL_LOCAL
 }
